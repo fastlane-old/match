@@ -57,11 +57,18 @@ module Match
 
     # @return the name of the provisioning profile type
     def self.profile_type_name(type)
-      return "Development" if type == :development
-      return "AdHoc" if type == :adhoc
-      return "AppStore" if type == :appstore
-      return "InHouse" if type == :enterprise
-      return "Unkown"
+      case type
+      when :development
+        "Development"
+      when :adhoc
+        "AdHoc"
+      when :appstore
+        "AppStore"
+      when :enterprise
+        "InHouse"
+      else
+        "Unknown"
+      end
     end
   end
 end
