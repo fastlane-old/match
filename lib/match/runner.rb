@@ -47,8 +47,7 @@ module Match
       if certs.count == 0 or keys.count == 0
         UI.important "Couldn't find a valid code signing identity in the git repo for #{cert_type}... creating one for you now"
         UI.crash!("No code signing identity found and can not create a new one because you enabled `readonly`") if params[:readonly]
-        cert_path = Generator.generate_certificate(params, (cert_type == :development_enterprise ? :development : cert_type))
-
+        cert_path = Generator.generate_certificate(params, cert_type)
         self.changes_to_commit = true
       else
         cert_path = certs.last
