@@ -87,11 +87,11 @@ class MatchApplication
       c.syntax = "match nuke"
       c.description = "Delete all certificates and provisioning profiles from the Apple Dev Portal"
       c.action do |args, options|
-        FastlaneCore::UI.user_error!("Please run `match nuke [type], allowed values: distribution and development")
+        FastlaneCore::UI.user_error!("Please run `match nuke [type], allowed values: distribution and development, debug, release")
       end
     end
 
-    ["development", "distribution"].each do |type|
+    ["development", "distribution", "debug", "release"].each do |type|
       command "nuke #{type}" do |c|
         c.syntax = "match nuke #{type}"
         c.description = "Delete all certificates and provisioning profiles from the Apple Dev Portal of the type #{type}"

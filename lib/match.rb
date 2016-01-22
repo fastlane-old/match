@@ -20,7 +20,7 @@ module Match
   UI = FastlaneCore::UI
 
   def self.environments
-    envs = %w(appstore adhoc development)
+    envs = %w(appstore adhoc development debug release)
     envs << "enterprise" if self.enterprise?
     return envs
   end

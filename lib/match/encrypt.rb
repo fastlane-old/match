@@ -64,7 +64,7 @@ module Match
     private
 
     def iterate(source_path)
-      Dir[File.join(source_path, "**", "*.{cer,p12,mobileprovision}")].each do |path|
+      Dir[File.join(source_path, "**", "*.{cer,p12,mobileprovision,keystore,supply}")].each do |path|
         next if File.directory?(path)
         yield(path)
       end
