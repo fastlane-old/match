@@ -3,6 +3,11 @@ module Match
     attr_accessor :changes_to_commit
 
     def run(params)
+      if File.exist? File.join(params[:workspace], "match_manual.mark")
+        UI.important "Match git repo marked by manual mode, forcing readonly option 🔫"
+        params[:readonly] = true
+      end
+
       FastlaneCore::PrintTable.print_values(config: params,
                                          hide_keys: [:workspace],
                                              title: "Summary for match #{Match::VERSION}")
