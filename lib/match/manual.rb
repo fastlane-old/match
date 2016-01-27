@@ -72,6 +72,7 @@ module Match
       keys = Dir[File.join(params[:workspace], "certs", cert_type.to_s, "*.p12")]
 
       if certs.count != 0
+        return unless UI.confirm("Confirm, you wish to replace your current certificate and private key?")
         FileUtils.rm certs.last
         UI.important "Removed #{File.basename(certs.last)}."
       end
