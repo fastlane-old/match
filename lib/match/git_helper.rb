@@ -1,10 +1,10 @@
 module Match
   class GitHelper
-    def self.clone(git_url, shallow_clone, manual_password: nil)
+    def self.clone(git_url, shallow_clone, manual_password: nil, branch: "master")
       return @dir if @dir
 
       @dir = Dir.mktmpdir
-      command = "git clone '#{git_url}' '#{@dir}'"
+      command = "git clone '#{git_url}' -b '#{branch}' '#{@dir}'"
       command << " --depth 1" if shallow_clone
 
       UI.message "Cloning remote git repo..."
@@ -47,7 +47,7 @@ module Match
       end
     end
 
-    def self.commit_changes(path, message, git_url)
+    def self.commit_changes(path, message, git_url, branch: "master")
       Dir.chdir(path) do
         return if `git status`.include?("nothing to commit")
 
@@ -57,7 +57,7 @@ module Match
         commands = []
         commands << "git add -A"
         commands << "git commit -m '#{message}'"
-        commands << "git push origin master"
+        commands << "git push origin '#{branch}'"
 
         UI.message "Pushing changes to remote git repo..."
 
