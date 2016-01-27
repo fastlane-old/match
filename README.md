@@ -297,6 +297,24 @@ match change_password
 
 You'll be asked for the new password on all your machines on the next run.
 
+### Manual control
+
+If you for any reason do not have access to the Dev portal, you can still save your certificates and profiles in match.
+
+To save your certificate, run.
+```
+match manual -p path/to/key.p12 -c path/to/my.mobileprovision -r https://github.com/fastlane/certificates -a tools.fastlane.app -y appstore
+```
+
+If you have a certificate already, you will be prompted for confirmation before it is replaced.
+
+To save your profile, run.
+```
+match manual -m path/to/my.cer -r https://github.com/fastlane/certificates -a tools.fastlane.app -y appstore
+```
+
+Note that taking manual control disables access to the Dev portal for that match repo.
+
 ### Manual Decrypt
 
 If you want to manually decrypt a file you can.
