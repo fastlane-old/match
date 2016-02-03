@@ -74,6 +74,12 @@ module Match
 
       # Install the provisioning profiles
       profile = profiles.last
+
+      if params[:force] == false
+        params[:force] = device_count_different?(params: params,
+                                                profile: profile)
+      end
+
       if profile.nil? or params[:force]
         UI.crash!("No matching provisioning profiles found and can not create a new one because you enabled `readonly`") if params[:readonly]
         profile = Generator.generate_provisioning_profile(params: params,
@@ -89,6 +95,21 @@ module Match
       Utils.fill_environment(params, uuid)
 
       return uuid
+    end
+
+    def device_count_different?(params: nil, profile: nil)
+      if profile && params[:force_for_new_devices]
+        parsed = FastlaneCore::ProvisioningProfile.parse(profile)
+        uuid = parsed["UUID"]
+
+        portal_profiles = Spaceship.provisioning_profile
+                            .ad_hoc.find_by_bundle_id(params[:app_identifier])
+        portal_profile = portal_profiles.detect { |i| i.uuid == uuid }
+        profile_device_count = portal_profile.devices.count
+        portal_device_count = Spaceship.device.all.count
+
+        return portal_device_count != profile_device_count
+      end
     end
   end
 end
