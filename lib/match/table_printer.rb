@@ -5,7 +5,7 @@ module Match
 
       rows << ["App Identifier", params[:app_identifier]]
       rows << ["Type", params[:type]]
-      rows << ["UUID", uuid]
+      rows << ["UUID", uuid] unless uuid.nil?
       rows << ["Environment Variable", Utils.environment_variable_name(params)]
 
       params = {}

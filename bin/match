@@ -91,6 +91,17 @@ class MatchApplication
       end
     end
 
+    command :manual do |c|
+      c.syntax = "match manual"
+      c.description = "Manually update certificates and provisioning profiles that normally would be fetched from the Apple Dev Portal"
+      c.action do |args, options|
+        params = FastlaneCore::Configuration.create(Match::Options.available_options, options.__hash__)
+        params.load_configuration_file("Matchfile")
+
+        Match::Manual.new.run(params)
+      end
+    end
+
     ["development", "distribution"].each do |type|
       command "nuke #{type}" do |c|
         c.syntax = "match nuke #{type}"

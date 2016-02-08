@@ -2,14 +2,16 @@ describe Match do
   describe Match::Runner do
     it "creates a new profile and certificate if it doesn't exist yet" do
       git_url = "https://github.com/fastlane/certificates"
+      repo_dir = Dir.mktmpdir
+
       values = {
         app_identifier: "tools.fastlane.app",
         type: "appstore",
-        git_url: git_url
+        git_url: git_url,
+        workspace: repo_dir
       }
 
       config = FastlaneCore::Configuration.create(Match::Options.available_options, values)
-      repo_dir = Dir.mktmpdir
       cert_path = File.join(repo_dir, "something")
       profile_path = "./spec/fixtures/test.mobileprovision"
 
@@ -32,14 +34,16 @@ describe Match do
 
     it "uses existing certificates and profiles if they exist" do
       git_url = "https://github.com/fastlane/certificates"
+      repo_dir = "./spec/fixtures/existing"
+
       values = {
         app_identifier: "tools.fastlane.app",
         type: "appstore",
-        git_url: git_url
+        git_url: git_url,
+        workspace: repo_dir
       }
 
       config = FastlaneCore::Configuration.create(Match::Options.available_options, values)
-      repo_dir = "./spec/fixtures/existing"
       cert_path = "./spec/fixtures/existing/certs/distribution/E7P4EE896K.cer"
       key_path = "./spec/fixtures/existing/certs/distribution/E7P4EE896K.p12"
       keychain = "login.keychain"
@@ -59,6 +63,42 @@ describe Match do
       expect(spaceship).to receive(:bundle_identifier_exists).and_return(true)
 
       Match::Runner.new.run(config)
+    end
+
+    it "overrides readonly option when manual match is detected in repo" do
+      git_url = "https://github.com/fastlane/certificates"
+      repo_dir = "./spec/fixtures/existing"
+
+      # To ensure manual match is detected
+      manual_mark_file = File.join(repo_dir, "match_manual.mark")
+      File.write(manual_mark_file, "")
+
+      values = {
+        app_identifier: "tools.fastlane.app",
+        type: "appstore",
+        git_url: git_url,
+        workspace: repo_dir,
+        readonly: false
+      }
+
+      config = FastlaneCore::Configuration.create(Match::Options.available_options, values)
+      cert_path = "./spec/fixtures/existing/certs/distribution/E7P4EE896K.cer"
+      key_path = "./spec/fixtures/existing/certs/distribution/E7P4EE896K.p12"
+      keychain = "login.keychain"
+
+      expect(Match::GitHelper).to receive(:clone).with(git_url, true).and_return(repo_dir)
+      expect(Match::Utils).to receive(:import).with(key_path, keychain).and_return(nil)
+      expect(Match::GitHelper).to_not receive(:commit_changes)
+
+      # To also install the certificate, fake that
+      expect(FastlaneCore::CertChecker).to receive(:installed?).with(cert_path).and_return(false)
+      expect(Match::Utils).to receive(:import).with(cert_path, keychain).and_return(nil)
+
+      expect(Match::SpaceshipEnsure).to_not receive(:new)
+
+      Match::Runner.new.run(config)
+
+      File.delete(manual_mark_file)
     end
   end
 end

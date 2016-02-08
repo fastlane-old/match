@@ -91,7 +91,28 @@ module Match
                                          end
                                        end
                                      end,
-                                     optional: true)
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :mobile_provision,
+                                     env_name: "MATCH_MOBILE_PROVISION",
+                                     description: "Path to the mobile provision to save - only used in manual mode",
+                                     is_string: true,
+                                     short_option: '-m',
+                                     optional: true,
+                                     default_value: nil),
+        FastlaneCore::ConfigItem.new(key: :cert,
+                                     env_name: "MATCH_CERT",
+                                     description: "Path to the certificate to save - only used in manual mode",
+                                     is_string: true,
+                                     short_option: '-c',
+                                     optional: true,
+                                     default_value: nil),
+        FastlaneCore::ConfigItem.new(key: :p12,
+                                     env_name: "MATCH_P_12",
+                                     description: "Path to the private key to save - only used in manual mode",
+                                     short_option: '-p',
+                                     is_string: true,
+                                     optional: true,
+                                     default_value: nil)
       ]
     end
   end
