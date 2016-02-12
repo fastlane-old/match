@@ -24,6 +24,12 @@ module Match
                                          UI.user_error!("Unsupported environment #{value}, must be in #{Match.environments.join(', ')}")
                                        end
                                      end),
+        FastlaneCore::ConfigItem.new(key: :platform,
+                                     env_name: "MATCH_PLATFORM",
+                                     description: "Which platform to create a certificate for",
+                                     is_string: true,
+                                     short_option: "-p",
+                                     default_value: 'ios'),
         FastlaneCore::ConfigItem.new(key: :app_identifier,
                                      short_option: "-a",
                                      env_name: "MATCH_APP_IDENTIFIER",
