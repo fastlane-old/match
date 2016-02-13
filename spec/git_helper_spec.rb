@@ -16,8 +16,9 @@ describe Match do
         path = Dir.mktmpdir # to have access to the actual path
         expect(Dir).to receive(:mktmpdir).and_return(path)
         git_url = "https://github.com/fastlane/certificates"
+        branch = "master"
         shallow_clone = true
-        command = "git clone '#{git_url}' '#{path}' --depth 1"
+        command = "git clone '#{git_url}' -b '#{branch}' '#{path}' --depth 1"
         to_params = {
           command: command,
           print_all: nil,
@@ -37,8 +38,9 @@ describe Match do
         path = Dir.mktmpdir # to have access to the actual path
         expect(Dir).to receive(:mktmpdir).and_return(path)
         git_url = "https://github.com/fastlane/certificates"
+        branch = "master"
         shallow_clone = false
-        command = "git clone '#{git_url}' '#{path}'"
+        command = "git clone '#{git_url}' -b '#{branch}' '#{path}'"
         to_params = {
           command: command,
           print_all: nil,

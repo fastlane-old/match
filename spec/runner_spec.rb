@@ -2,6 +2,8 @@ describe Match do
   describe Match::Runner do
     it "creates a new profile and certificate if it doesn't exist yet" do
       git_url = "https://github.com/fastlane/certificates"
+      branch = "master"
+      manual_password = false
       values = {
         app_identifier: "tools.fastlane.app",
         type: "appstore",
@@ -13,7 +15,7 @@ describe Match do
       cert_path = File.join(repo_dir, "something")
       profile_path = "./spec/fixtures/test.mobileprovision"
 
-      expect(Match::GitHelper).to receive(:clone).with(git_url, true).and_return(repo_dir)
+      expect(Match::GitHelper).to receive(:clone).with(git_url, true, manual_password: false, branch: branch).and_return(repo_dir)
       expect(Match::Generator).to receive(:generate_certificate).with(config, :distribution).and_return(cert_path)
       expect(Match::Generator).to receive(:generate_provisioning_profile).with(params: config,
                                                                             prov_type: :appstore,
@@ -32,6 +34,8 @@ describe Match do
 
     it "uses existing certificates and profiles if they exist" do
       git_url = "https://github.com/fastlane/certificates"
+      branch = "master"
+      manual_password = false
       values = {
         app_identifier: "tools.fastlane.app",
         type: "appstore",
@@ -44,7 +48,7 @@ describe Match do
       key_path = "./spec/fixtures/existing/certs/distribution/E7P4EE896K.p12"
       keychain = "login.keychain"
 
-      expect(Match::GitHelper).to receive(:clone).with(git_url, true).and_return(repo_dir)
+      expect(Match::GitHelper).to receive(:clone).with(git_url, true, manual_password: false, branch: branch).and_return(repo_dir)
       expect(Match::Utils).to receive(:import).with(key_path, keychain).and_return(nil)
       expect(Match::GitHelper).to_not receive(:commit_changes)
 
