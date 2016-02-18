@@ -1,6 +1,33 @@
 module Match
   # Generate missing resources
   class Generator
+    def self.generate_keystore(params, key_type)
+      require "fileutils"
+      output_path = File.join(params[:workspace], "keystores", key_type.to_s)
+      FileUtils.mkdir_p(output_path)
+
+      cmd = "keytool -genkey -v -keystore #{output_path}/#{params[:app_identifier]}.keystore -storepass #{params[:keystore_password]} -keypass #{params[:keystore_password]} -alias #{params[:keystore_alias]} -dname 'CN=#{params[:keystore_fullname]},L=#{params[:keystore_city]}' -validity 1000"
+      FastlaneCore::CommandExecutor.execute(command: cmd,
+                                          print_all: true,
+                                      print_command: true)
+
+      "#{output_path}/#{params[:app_identifier]}.keystore"
+    end
+
+    def self.generate_supply_key(params, key_type)
+      require "fileutils"
+      output_path = File.join(params[:workspace], "supply", key_type.to_s)
+      FileUtils.mkdir_p(output_path)
+
+      json_path = if !params[:supply_json_import]
+                   ask("Type path to supply json Key (this can be deleted after successfull import): ".yellow)
+                 else
+                   params[:supply_json_import]
+                 end
+      FileUtils.cp(json_path, "#{output_path}/#{params[:app_identifier]}.supply")
+      "#{output_path}/#{params[:app_identifier]}.supply"
+    end
+
     def self.generate_certificate(params, cert_type)
       require 'cert'
       output_path = File.join(params[:workspace], "certs", cert_type.to_s)

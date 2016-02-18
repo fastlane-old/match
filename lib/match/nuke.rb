@@ -6,6 +6,7 @@ module Match
     attr_accessor :certs
     attr_accessor :profiles
     attr_accessor :files
+    attr_accessor :keystores
 
     def run(params, type: nil)
       self.params = params
@@ -46,11 +47,24 @@ module Match
 
     # Collect all the certs/profiles
     def prepare_list
-      UI.message "Fetching certificates and profiles..."
+      UI.message "Fetching certificates,profiles and keystores..."
       cert_type = type.to_sym
 
       prov_types = [:development]
       prov_types = [:appstore, :adhoc] if cert_type == :distribution
+
+      if params[:android]
+        self.certs = []
+        self.profiles = []
+        if params[:supply]
+          supplykeys = Dir[File.join(params[:workspace], "**", cert_type.to_s, "*.supply")]
+          self.files = supplykeys
+        else
+          keystores = Dir[File.join(params[:workspace], "**", cert_type.to_s, "*.keystore")]
+          self.files = keystores
+        end
+        return
+      end
 
       Spaceship.login(params[:username])
       Spaceship.select_team
