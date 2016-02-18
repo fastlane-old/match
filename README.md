@@ -272,6 +272,13 @@ This is useful when installing your application on your device using the Develop
 
 You can statically select the right provisioning profile in your Xcode project (the name will be `match Development tools.fastlane.app`).
 
+### Continuous Integration
+
+When using match with a CI you'll need to do two things:
+
+- Set your encryption password as secret environment variable named `MATCH_PASSWORD`
+- Remember to give your CI access to the repo containing your keys, certs and profiles. You'll likely have to make a "bot" account on your Git host since you'll already have used the CI's deploy key for codebase repo.
+
 ### Nuke
 
 If you never really cared about code signing and have a messy Apple Developer account with a lot of invalid, expired or Xcode managed profiles/certificates, you can use the `match nuke` command to revoke your certificates and provisioning profiles. Don't worry, apps that are already available in the App Store will still work. Builds distributed via TestFlight might be disabled after nuking your account, you'll have to re-upload a new build. After clearing your account you'll start from a clean state, and you can run `match` to generate your certificates and profiles again.
