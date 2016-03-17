@@ -10,7 +10,9 @@
 ------
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/fastlane/fastlane/master/match/assets/match.png" height="110">
+  <a href="https://github.com/fastlane/fastlane/tree/master/match">
+    <img src="https://raw.githubusercontent.com/fastlane/fastlane/master/match/assets/match.png" height="110">
+  </a>
 </p>
 
 <h3 align="center">💎🚀 <b>match</b> has moved to the <b>fastlane</b> <a href='https://github.com/fastlane/fastlane/tree/master/match'>main repo</a> 🚀💎</h2>
